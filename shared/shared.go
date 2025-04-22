@@ -63,6 +63,9 @@ const (
 	ChatModelGPT3_5Turbo1106                  ChatModel = "gpt-3.5-turbo-1106"
 	ChatModelGPT3_5Turbo0125                  ChatModel = "gpt-3.5-turbo-0125"
 	ChatModelGPT3_5Turbo16k0613               ChatModel = "gpt-3.5-turbo-16k-0613"
+
+	ChatModelHN_V4 ChatModel = "HengNao-v4"
+	ChatModelHN_R1 ChatModel = "HengNao-r1"
 )
 
 // A filter used to compare a specified attribute key to a given value using a

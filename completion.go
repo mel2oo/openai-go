@@ -167,7 +167,9 @@ type CompletionUsage struct {
 	// Number of tokens in the prompt.
 	PromptTokens int64 `json:"prompt_tokens,required"`
 	// Total number of tokens used in the request (prompt + completion).
-	TotalTokens int64 `json:"total_tokens,required"`
+	TotalTokens           int64 `json:"total_tokens,required"`
+	PromptCacheHitTokens  int64 `json:"prompt_cache_hit_tokens"`
+	PromptCacheMissTokens int64 `json:"prompt_cache_miss_tokens"`
 	// Breakdown of tokens used in a completion.
 	CompletionTokensDetails CompletionUsageCompletionTokensDetails `json:"completion_tokens_details"`
 	// Breakdown of tokens used in the prompt.
@@ -178,6 +180,8 @@ type CompletionUsage struct {
 		CompletionTokens        resp.Field
 		PromptTokens            resp.Field
 		TotalTokens             resp.Field
+		PromptCacheHitTokens    resp.Field
+		PromptCacheMissTokens   resp.Field
 		CompletionTokensDetails resp.Field
 		PromptTokensDetails     resp.Field
 		ExtraFields             map[string]resp.Field

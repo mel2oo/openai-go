@@ -149,6 +149,9 @@ const ChatModelGPT3_5Turbo0125 = shared.ChatModelGPT3_5Turbo0125
 // Equals "gpt-3.5-turbo-16k-0613"
 const ChatModelGPT3_5Turbo16k0613 = shared.ChatModelGPT3_5Turbo16k0613
 
+const ChatModelHN_V4 = shared.ChatModelHN_V4
+const ChatModelHN_R1 = shared.ChatModelHN_R1
+
 // A filter used to compare a specified attribute key to a given value using a
 // defined comparison operation.
 //

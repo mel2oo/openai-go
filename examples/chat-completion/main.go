@@ -4,10 +4,13 @@ import (
 	"context"
 
 	"github.com/openai/openai-go"
+	"github.com/openai/openai-go/option"
 )
 
 func main() {
-	client := openai.NewClient()
+	client := openai.NewClient(
+		option.WithBaseURL("http://10.20.152.76:8200/v1"),
+	)
 
 	ctx := context.Background()
 
@@ -20,12 +23,12 @@ func main() {
 		Messages: []openai.ChatCompletionMessageParamUnion{
 			openai.UserMessage(question),
 		},
-		Seed:  openai.Int(0),
-		Model: openai.ChatModelGPT4o,
+		Seed:      openai.Int(0),
+		Model:     openai.ChatModelHN_R1,
+		Reasoning: openai.Bool(true),
 	}
 
 	completion, err := client.Chat.Completions.New(ctx, params)
-
 	if err != nil {
 		panic(err)
 	}
