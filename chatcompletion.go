@@ -647,16 +647,19 @@ type ChatCompletionChunkChoiceDelta struct {
 	// Any of "developer", "system", "user", "assistant", "tool".
 	Role      string                                   `json:"role"`
 	ToolCalls []ChatCompletionChunkChoiceDeltaToolCall `json:"tool_calls"`
+	// Content of Reasoning
+	ReasoningContent string `json:"reasoning_content,omitzero"`
 	// Metadata for the response, check the presence of optional fields with the
 	// [resp.Field.IsPresent] method.
 	JSON struct {
-		Content      resp.Field
-		FunctionCall resp.Field
-		Refusal      resp.Field
-		Role         resp.Field
-		ToolCalls    resp.Field
-		ExtraFields  map[string]resp.Field
-		raw          string
+		Content          resp.Field
+		FunctionCall     resp.Field
+		Refusal          resp.Field
+		Role             resp.Field
+		ToolCalls        resp.Field
+		ReasoningContent resp.Field
+		ExtraFields      map[string]resp.Field
+		raw              string
 	} `json:"-"`
 }
 
@@ -2379,6 +2382,12 @@ type ChatCompletionNewParams struct {
 
 	// reasoning for deepseek
 	Reasoning param.Opt[bool] `json:"reasoning,omitzero"`
+
+	// GD
+	GuidedChoice []string `json:"guided_choice,omitzero"`
+	GuidedRegex  string   `json:"guided_regex,omitzero"`
+	GuidedJson   string   `json:"guided_json,omitzero"`
+
 	paramObj
 }
 

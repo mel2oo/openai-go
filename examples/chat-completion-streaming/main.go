@@ -11,7 +11,7 @@ func main() {
 
 	ctx := context.Background()
 
-	question := "Write me a haiku"
+	question := "选择一个你喜欢的词语"
 
 	print("> ")
 	println(question)
@@ -21,14 +21,20 @@ func main() {
 		Messages: []openai.ChatCompletionMessageParamUnion{
 			openai.UserMessage(question),
 		},
-		Seed:  openai.Int(0),
-		Model: openai.ChatModelGPT4o,
+		Seed:         openai.Int(0),
+		Model:        openai.ChatModelHN_R1,
+		GuidedChoice: []string{"天气", "心情", "食物", "运动", "音乐"},
+		// Reasoning: openai.Bool(true),
 	})
 
 	for stream.Next() {
 		evt := stream.Current()
 		if len(evt.Choices) > 0 {
-			print(evt.Choices[0].Delta.Content)
+			if len(evt.Choices[0].Delta.ReasoningContent) > 0 {
+				print(evt.Choices[0].Delta.ReasoningContent)
+			} else {
+				print(evt.Choices[0].Delta.Content)
+			}
 		}
 	}
 	println()
