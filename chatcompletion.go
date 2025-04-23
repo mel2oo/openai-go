@@ -2388,6 +2388,9 @@ type ChatCompletionNewParams struct {
 	GuidedRegex  string   `json:"guided_regex,omitzero"`
 	GuidedJson   string   `json:"guided_json,omitzero"`
 
+	// LoraType
+	LoraType param.Opt[string] `json:"lora_type,omitzero"`
+
 	paramObj
 }
 
