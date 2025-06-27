@@ -28,22 +28,35 @@ func TestResponseNewWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Responses.New(context.TODO(), responses.ResponseNewParams{
+		Background: openai.Bool(true),
+		Include:    []responses.ResponseIncludable{responses.ResponseIncludableCodeInterpreterCallOutputs},
 		Input: responses.ResponseNewParamsInputUnion{
 			OfString: openai.String("string"),
 		},
-		Model:           shared.ResponsesModel("gpt-4o"),
-		Include:         []responses.ResponseIncludable{responses.ResponseIncludableFileSearchCallResults},
 		Instructions:    openai.String("instructions"),
 		MaxOutputTokens: openai.Int(0),
-		Metadata: shared.MetadataParam{
+		MaxToolCalls:    openai.Int(0),
+		Metadata: shared.Metadata{
 			"foo": "string",
 		},
+		Model:              shared.ResponsesModel("gpt-4o"),
 		ParallelToolCalls:  openai.Bool(true),
 		PreviousResponseID: openai.String("previous_response_id"),
+		Prompt: responses.ResponsePromptParam{
+			ID: "id",
+			Variables: map[string]responses.ResponsePromptVariableUnionParam{
+				"foo": {
+					OfString: openai.String("string"),
+				},
+			},
+			Version: openai.String("version"),
+		},
 		Reasoning: shared.ReasoningParam{
 			Effort:          shared.ReasoningEffortLow,
-			GenerateSummary: shared.ReasoningGenerateSummaryConcise,
+			GenerateSummary: shared.ReasoningGenerateSummaryAuto,
+			Summary:         shared.ReasoningSummaryAuto,
 		},
+		ServiceTier: responses.ResponseNewParamsServiceTierAuto,
 		Store:       openai.Bool(true),
 		Temperature: openai.Float(1),
 		Text: responses.ResponseTextConfigParam{
@@ -55,27 +68,19 @@ func TestResponseNewWithOptionalParams(t *testing.T) {
 			OfToolChoiceMode: openai.Opt(responses.ToolChoiceOptionsNone),
 		},
 		Tools: []responses.ToolUnionParam{{
-			OfFileSearch: &responses.FileSearchToolParam{
-				VectorStoreIDs: []string{"string"},
-				Filters: responses.FileSearchToolFiltersUnionParam{
-					OfComparisonFilter: &shared.ComparisonFilterParam{
-						Key:  "key",
-						Type: shared.ComparisonFilterTypeEq,
-						Value: shared.ComparisonFilterValueUnionParam{
-							OfString: openai.String("string"),
-						},
-					},
+			OfFunction: &responses.FunctionToolParam{
+				Name: "name",
+				Parameters: map[string]any{
+					"foo": "bar",
 				},
-				MaxNumResults: openai.Int(0),
-				RankingOptions: responses.FileSearchToolRankingOptionsParam{
-					Ranker:         "auto",
-					ScoreThreshold: openai.Float(0),
-				},
+				Strict:      openai.Bool(true),
+				Description: openai.String("description"),
 			},
 		}},
-		TopP:       openai.Float(1),
-		Truncation: responses.ResponseNewParamsTruncationAuto,
-		User:       openai.String("user-1234"),
+		TopLogprobs: openai.Int(0),
+		TopP:        openai.Float(1),
+		Truncation:  responses.ResponseNewParamsTruncationAuto,
+		User:        openai.String("user-1234"),
 	})
 	if err != nil {
 		var apierr *openai.Error
@@ -102,7 +107,8 @@ func TestResponseGetWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"resp_677efb5139a88190b512bc3fef8e535d",
 		responses.ResponseGetParams{
-			Include: []responses.ResponseIncludable{responses.ResponseIncludableFileSearchCallResults},
+			Include:       []responses.ResponseIncludable{responses.ResponseIncludableCodeInterpreterCallOutputs},
+			StartingAfter: openai.Int(0),
 		},
 	)
 	if err != nil {
@@ -127,6 +133,28 @@ func TestResponseDelete(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	err := client.Responses.Delete(context.TODO(), "resp_677efb5139a88190b512bc3fef8e535d")
+	if err != nil {
+		var apierr *openai.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestResponseCancel(t *testing.T) {
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := openai.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
+	)
+	_, err := client.Responses.Cancel(context.TODO(), "resp_677efb5139a88190b512bc3fef8e535d")
 	if err != nil {
 		var apierr *openai.Error
 		if errors.As(err, &apierr) {

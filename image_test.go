@@ -57,14 +57,20 @@ func TestImageEditWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Images.Edit(context.TODO(), openai.ImageEditParams{
-		Image:          io.Reader(bytes.NewBuffer([]byte("some file contents"))),
-		Prompt:         "A cute baby sea otter wearing a beret",
-		Mask:           io.Reader(bytes.NewBuffer([]byte("some file contents"))),
-		Model:          openai.ImageModelDallE2,
-		N:              openai.Int(1),
-		ResponseFormat: openai.ImageEditParamsResponseFormatURL,
-		Size:           openai.ImageEditParamsSize1024x1024,
-		User:           openai.String("user-1234"),
+		Image: openai.ImageEditParamsImageUnion{
+			OfFile: io.Reader(bytes.NewBuffer([]byte("some file contents"))),
+		},
+		Prompt:            "A cute baby sea otter wearing a beret",
+		Background:        openai.ImageEditParamsBackgroundTransparent,
+		Mask:              io.Reader(bytes.NewBuffer([]byte("some file contents"))),
+		Model:             openai.ImageModelDallE2,
+		N:                 openai.Int(1),
+		OutputCompression: openai.Int(100),
+		OutputFormat:      openai.ImageEditParamsOutputFormatPNG,
+		Quality:           openai.ImageEditParamsQualityHigh,
+		ResponseFormat:    openai.ImageEditParamsResponseFormatURL,
+		Size:              openai.ImageEditParamsSize1024x1024,
+		User:              openai.String("user-1234"),
 	})
 	if err != nil {
 		var apierr *openai.Error
@@ -88,14 +94,18 @@ func TestImageGenerateWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Images.Generate(context.TODO(), openai.ImageGenerateParams{
-		Prompt:         "A cute baby sea otter",
-		Model:          openai.ImageModelDallE2,
-		N:              openai.Int(1),
-		Quality:        openai.ImageGenerateParamsQualityStandard,
-		ResponseFormat: openai.ImageGenerateParamsResponseFormatURL,
-		Size:           openai.ImageGenerateParamsSize1024x1024,
-		Style:          openai.ImageGenerateParamsStyleVivid,
-		User:           openai.String("user-1234"),
+		Prompt:            "A cute baby sea otter",
+		Background:        openai.ImageGenerateParamsBackgroundTransparent,
+		Model:             openai.ImageModelDallE2,
+		Moderation:        openai.ImageGenerateParamsModerationLow,
+		N:                 openai.Int(1),
+		OutputCompression: openai.Int(100),
+		OutputFormat:      openai.ImageGenerateParamsOutputFormatPNG,
+		Quality:           openai.ImageGenerateParamsQualityMedium,
+		ResponseFormat:    openai.ImageGenerateParamsResponseFormatURL,
+		Size:              openai.ImageGenerateParamsSize1024x1024,
+		Style:             openai.ImageGenerateParamsStyleVivid,
+		User:              openai.String("user-1234"),
 	})
 	if err != nil {
 		var apierr *openai.Error
