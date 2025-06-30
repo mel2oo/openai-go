@@ -2298,12 +2298,16 @@ type ChatCompletionNewParams struct {
 	Reasoning param.Opt[bool] `json:"reasoning,omitzero"`
 
 	// GD
-	GuidedChoice []string `json:"guided_choice,omitzero"`
-	GuidedRegex  string   `json:"guided_regex,omitzero"`
-	GuidedJson   string   `json:"guided_json,omitzero"`
+	GuidedChoice []string          `json:"guided_choice,omitzero"`
+	GuidedRegex  param.Opt[string] `json:"guided_regex,omitzero"`
+	GuidedJson   param.Opt[string] `json:"guided_json,omitzero"`
 
 	// LoraType
 	LoraType param.Opt[string] `json:"lora_type,omitzero"`
+
+	// For Hugging Face models
+	TopK              param.Opt[int64]   `json:"top_k,omitzero"`
+	RepetitionPenalty param.Opt[float64] `json:"repetition_penalty,omitzero"`
 
 	paramObj
 }
